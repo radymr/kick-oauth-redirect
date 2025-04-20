@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Kick OAuth Redirect</title>
-    <script>
-      // Extract the access token from the fragment
+<head>
+  <title>Kick OAuth Redirect</title>
+  <script>
+    // Immediately send the full redirect URL back to the extension
+    (function () {
       const hash = window.location.hash;
-      if (hash && hash.includes("access_token")) {
-        const target = 'https://0237335a57f5225bad04637d7ae0a62c26107e24.extensions.allizom.org/';
-        const redirectTo = target + hash;
-        window.location.href = redirectTo;
+      if (hash.includes("access_token")) {
+        const redirectUrl = window.location.href;
+
+        // Send it to the extension
+        const message = { type: "oauth_redirect", url: redirectUrl };
+        window.opener.postMessage(message, "*");
+        window.close();
       } else {
-        document.body.innerText = "No access token in URL.";
+        document.body.innerText = "Authorization failed or was canceled.";
       }
-    </script>
-  </head>
-  <body>
-    Redirecting back to extension...
-  </body>
+    })();
+  </script>
+</head>
+<body>
+  Redirecting...
+</body>
 </html>
