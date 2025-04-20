@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kick OAuth Redirect</title>
+</head>
+<body>
+  <p>Redirecting...</p>
+  <script>
+    const code = new URLSearchParams(window.location.search).get("code");
+    if (code) {
+      const extensionUrl = "https://0237335a57f5225bad04637d7ae0a62c26107e24.extensions.allizom.org/";
+      window.location.href = `${extensionUrl}#code=${code}`;
+    } else {
+      document.body.innerHTML = "<p>Missing OAuth code from Kick.</p>";
+    }
+  </script>
+</body>
+</html>
