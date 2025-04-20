@@ -1,25 +1,25 @@
+<!-- kick-redirect.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Kick OAuth Redirect</title>
-  <script>
-    // Immediately send the full redirect URL back to the extension
-    (function () {
-      const hash = window.location.hash;
-      if (hash.includes("access_token")) {
-        const redirectUrl = window.location.href;
-
-        // Send it to the extension
-        const message = { type: "oauth_redirect", url: redirectUrl };
-        window.opener.postMessage(message, "*");
-        window.close();
-      } else {
-        document.body.innerText = "Authorization failed or was canceled.";
-      }
-    })();
-  </script>
 </head>
 <body>
-  Redirecting...
+  <h2>Logging you in...</h2>
+  <script>
+    // Get access token from URL hash fragment
+    const hash = window.location.hash;
+    const tokenMatch = hash.match(/access_token=([^&]+)/);
+    const accessToken = tokenMatch ? tokenMatch[1] : null;
+
+    if (accessToken && window.opener) {
+      // Send token to the extension
+      window.opener.postMessage({ type: "kick_access_token", accessToken }, "*");
+    }
+
+    // Optional: Close window after a delay
+    setTimeout(() => window.close(), 1000);
+  </script>
 </body>
 </html>
