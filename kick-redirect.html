@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Kick OAuth Redirect</title>
-  <script>
-    window.onload = () => {
-      if (window.location.hash.includes("access_token=")) {
-        window.location.href = `https://${location.hostname}/kick-oauth-redirect/kick-redirect.html${location.hash}`;
-      }
-    };
-  </script>
-</head>
-<body>
-  <p>You may close this window.</p>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script>
+      (function () {
+        const hash = window.location.hash;
+        const redirectUrl = "moz-extension://" + window.location.search.split("=")[1] + "/redirect";
+        if (hash && redirectUrl.startsWith("moz-extension://")) {
+          window.location.href = redirectUrl + hash;
+        } else {
+          document.body.innerHTML = "<p>Redirect failed.</p>";
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <p>Redirecting...</p>
+  </body>
 </html>
