@@ -9,18 +9,23 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>OAuth Redirect</title></head>
-<body><p>Redirecting…</p>
-<script>
-  const params=new URLSearchParams(window.location.search);
-  const code=params.get('code');
-  if(code && window.opener){
-    window.opener.postMessage({type:'oauth_code',code},'*');
-    setTimeout(()=>window.close(),200);
-  } else {
-    console.error('No code in redirect URL');
-    document.body.textContent='Authorization failed';
-  }
-</script>
+<head>
+  <meta charset="UTF-8">
+  <title>OAuth Redirect</title>
+</head>
+<body>
+  <p>Redirecting…</p>
+  <script>
+    // Extract the `code` query parameter
+    const code = new URLSearchParams(window.location.search).get('code');
+    if (code && window.opener) {
+      console.log('[Redirect] Posting code to extension:', code);
+      window.opener.postMessage({ type: 'oauth_code', code }, '*');
+      setTimeout(() => window.close(), 200);
+    } else {
+      console.error('[Redirect] No code found');
+      document.body.textContent = 'Authorization failed';
+    }
+  </script>
 </body>
 </html>
