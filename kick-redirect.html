@@ -1,21 +1,35 @@
+// ========================================
+// Redirect Relay Page - kick-redirect.html
+// ========================================
+<!--
+  This HTML page is served by GitHub Pages at:
+  https://radymr.github.io/kick-oauth-redirect/kick-redirect.html
+  It captures the OAuth2 authorization code from the URL query
+  and relays it back to the extension via postMessage.
+-->
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Redirecting...</title>
-    <script>
-      (function () {
-        const hash = window.location.hash;
-        const redirectUrl = "moz-extension://" + window.location.search.split("=")[1] + "/redirect";
-        if (hash && redirectUrl.startsWith("moz-extension://")) {
-          window.location.href = redirectUrl + hash;
-        } else {
-          document.body.innerHTML = "<p>Redirect failed.</p>";
-        }
-      })();
-    </script>
-  </head>
-  <body>
-    <p>Redirecting...</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kick OAuth Redirect</title>
+</head>
+<body>
+  <p>Redirecting…</p>
+  <script>
+    // Extract `code` and `state` from the query parameters
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
+
+    if (code && window.opener) {
+      // Send the authorization code to the extension
+      window.opener.postMessage({ type: 'oauth_code', code, state }, '*');
+      // Close this window after a brief delay
+      setTimeout(() => window.close(), 200);
+    } else {
+      console.error('No authorization code found in URL.');
+      document.body.textContent = 'Authorization failed.';
+    }
+  </script>
+</body>
 </html>
